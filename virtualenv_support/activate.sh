@@ -38,6 +38,21 @@ deactivate () {
 deactivate nondestructive
 
 VIRTUAL_ENV="__VIRTUAL_ENV__"
+# the following requires bash, but it supports
+# moving the virtualenv to an arbitrary directory on another machine
+OURDIR=`dirname $BASH_SOURCE`
+IFS='/' read -ra PARSED <<< "$OURDIR"
+VIRTUAL_ENV=
+count=0
+nodes=${#PARSED[@]}
+let "nodes--"
+for i in ${PARSED[@]}; do
+   while [ $count -lt $nodes ]; do
+      VIRTUAL_ENV=${VIRTUAL_ENV}${PARSED[$count]}/
+      let "count++"
+   done
+done
+
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
